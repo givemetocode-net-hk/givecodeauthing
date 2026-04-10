@@ -1,0 +1,83 @@
+# GiveCodeAuthing
+
+A lightweight, full-stack authentication system built with Node.js, Express, and React. This system uses local JSON files for data persistence and provides a real-time monitoring dashboard.
+
+## Features
+
+- **User Management**: Signup, Login, and User Deletion.
+- **Flexible Security**: Toggle between plain-text and SHA-256 password hashing via environment variables.
+- **Real-time Logging**: Every authentication attempt and system action is logged with metadata (IP, User-Agent, Timestamp).
+- **JSON Storage**: No external database required; uses `users.json` and `logs.json`.
+- **API Monitor**: A built-in dashboard to view system logs and configuration status.
+
+## Prerequisites
+
+- Node.js (v18 or higher recommended)
+- npm or yarn
+
+## Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/givemetocode-net-hk/givecodeauthing.git
+   cd givecodeauthing
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Configure environment variables:
+   Create a `.env` file in the root directory (refer to `.env.example`):
+   ```env
+   RETURN_URL="https://your-callback-url.com"
+   PASSWORD_HASH="True" # Set to "False" for plain-text storage
+   ```
+
+## Running the Application
+
+### Development Mode
+Starts the server with `tsx` and enables Vite middleware for the frontend:
+```bash
+npm run dev
+```
+The app will be available at `http://localhost:3000`.
+
+### Production Mode
+1. Build the frontend:
+   ```bash
+   npm run build
+   ```
+2. Start the server:
+   ```bash
+   npm start
+   ```
+
+## API Reference
+
+### POST `/api/signup`
+Creates a new user.
+- **Body**: `{ "username": "...", "password": "..." }`
+
+### POST `/api/login`
+Authenticates a user.
+- **Body**: `{ "username": "...", "password": "..." }`
+- **Response**: Returns success status, username, timestamp, cookie ID, device, IP, and the configured `return_url`.
+
+### GET `/api/delete_user`
+Deletes a user from the system.
+- **Query Params**: `Username`, `cookieid`, `timestamp`
+
+### GET `/api/logs`
+Retrieves the system activity logs.
+
+## Project Structure
+
+- `server.ts`: Express server handling API routes and Vite integration.
+- `src/App.tsx`: React frontend (API Monitor dashboard).
+- `users.json`: Data store for user credentials.
+- `logs.json`: Data store for system activity.
+
+## Security Note
+This system is designed for demonstration and lightweight use. If `PASSWORD_HASH` is set to `False`, passwords are stored in **plain text**. Use `True` for production-like environments.
